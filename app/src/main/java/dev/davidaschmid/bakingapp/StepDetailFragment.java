@@ -20,7 +20,9 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -43,6 +45,8 @@ import com.google.android.exoplayer2.util.Util;
 
 import java.util.concurrent.TimeUnit;
 
+import dev.davidaschmid.BakingApp.model.RecipeModel;
+
 public class StepDetailFragment extends Fragment implements ExoPlayer.EventListener {
     private static final String CHANNEL_ID = "notification_channel";
     private static final String TAG = StepDetailFragment.class.getSimpleName();
@@ -51,9 +55,11 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
     String stepInstruction;
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
+    private ImageView mErrorImage;
     private static MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
     private NotificationManager mNotificationManager;
+    private String videoUrl;
     public StepDetailFragment(){
 
     }
@@ -63,14 +69,20 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_step_detail, container, false);
         mStepInstructionTV = rootView.findViewById(R.id.recipe_instruction_tv);
-        position = dev.davidaschmid.BakingApp.IngredientsStepsFragment.posInSteps;
-        stepInstruction = dev.davidaschmid.BakingApp.IngredientsStepsActivity.mRecipeModel.getSteps().get(position).getDescription();
+        mErrorImage = rootView.findViewById(R.id.error_image);
+        position = IngredientsStepsFragment.posInSteps;
+        RecipeModel.Step step = StepsAdapter.mRecipeModel.getStepGivenIndex(position);
+        stepInstruction = step.getDescription();
         mStepInstructionTV.setText(stepInstruction);
+        videoUrl = step.getVideoURL();
         mPlayerView = rootView.findViewById(R.id.playerView);
         initializeMediaSession();
-
-        initializePlayer(Uri.parse(
-                "asset:///4-press-crumbs-in-pie-plate-creampie.mp4"));
+        if(videoUrl.equals("")){
+            mErrorImage.setVisibility(View.VISIBLE);
+        }else{
+            mErrorImage.setVisibility(View.INVISIBLE);
+            initializePlayer(Uri.parse(videoUrl));
+        }
         return rootView;
     }
     private void initializeMediaSession(){
@@ -128,26 +140,30 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
         mNotificationManager.notify(0, builder.build());
     }
     private void initializePlayer(Uri mediaUri){
+        String userAgent;
         if(mExoPlayer == null){
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
             mPlayerView.setPlayer(mExoPlayer);
             mExoPlayer.addListener(this);
-            String userAgent = Util.getUserAgent(getContext(), "BakingApp");
-            MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
-                    getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
-            mExoPlayer.prepare(mediaSource);
-
-            mExoPlayer.setPlayWhenReady(true);
 
         }
+        userAgent = Util.getUserAgent(getContext(), "BakingApp");
+        MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
+                getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
+        mExoPlayer.prepare(mediaSource);
+
+        mExoPlayer.setPlayWhenReady(true);
+
     }
     private void releasePlayer(){
-        mNotificationManager.cancelAll();
-        mExoPlayer.stop();
-        mExoPlayer.release();
-        mExoPlayer = null;
+        //mNotificationManager.cancelAll();
+        if (mExoPlayer != null) {
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
     }
     @Override
     public void onDestroy(){
@@ -186,6 +202,7 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
 
     @Override
     public void onPlayerError(ExoPlaybackException error) {
+        int dummy = 0;
 
     }
 

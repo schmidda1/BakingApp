@@ -7,15 +7,24 @@ tools:context="dev.davidaschmid.BakingApp.StepDetailActivity"
 android:layout_width="match_parent"
 android:layout_height="match_parent">
 
-<com.google.android.exoplayer2.ui.SimpleExoPlayerView
-    android:id="@+id/playerView"
-    android:layout_width="match_parent"
-    android:layout_height="300dp"
-    android:layout_marginTop="8dp"
-    android:background="@android:color/black"
-    app:layout_constraintTop_toTopOf="parent"
-    tools:layout_editor_absoluteX="0dp" />
+    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+        android:id="@+id/playerView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@android:color/black"
+        app:default_artwork="@drawable/picture_frame"
+        app:layout_constraintTop_toTopOf="parent"
+        app:use_artwork="true"
 
+        tools:layout_editor_absoluteX="0dp" />
+
+    <ImageView
+        android:id="@+id/error_image"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:src="@drawable/picture_frame"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp" />
 <TextView
     android:id="@+id/recipe_instruction_tv"
     android:layout_width="match_parent"

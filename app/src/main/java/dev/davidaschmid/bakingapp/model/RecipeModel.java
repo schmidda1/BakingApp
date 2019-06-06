@@ -17,7 +17,7 @@ public class RecipeModel {
     private ArrayList<Ingredients> ingredients = null;
     @SerializedName("steps")
     @Expose
-    private ArrayList<Steps> steps = null;
+    private ArrayList<Step> steps = null;
     @SerializedName("servings")
     @Expose
     private int servings;
@@ -28,7 +28,7 @@ public class RecipeModel {
 
     }
     public String getName(){return this.name;}
-    public RecipeModel(int id, String name, ArrayList<Ingredients> ingredients, ArrayList<Steps> steps,
+    public RecipeModel(int id, String name, ArrayList<Ingredients> ingredients, ArrayList<Step> steps,
                        int servings, String image){
         this.id = id;
         this.name = name;
@@ -61,17 +61,17 @@ public class RecipeModel {
         public String getVideoUrl(){return videoUrl;}
 
     }
-    public class Steps{
+    public class Step {
         private int id;
         private String shortDescription;
         private String description;
         private String videoURL;
         private String thumbnailURL;
-        public Steps(){
+        public Step(){
 
         }
-        public Steps(int id, String shortDescription, String description,
-                     String videoUrl, String thumbnailUrl){
+        public Step(int id, String shortDescription, String description,
+                    String videoUrl, String thumbnailUrl){
             this.id = id;
             this.shortDescription = shortDescription;
             this.description = description;
@@ -82,11 +82,13 @@ public class RecipeModel {
         public String getDescription(){return description;}
         public String getVideoURL(){return videoURL;}
         public String getThumbnailURL(){return thumbnailURL;}
-    }//end class Steps
-    public ArrayList<Steps> getSteps(){
+    }//end class Step
+    public ArrayList<Step> getSteps(){
         return steps;
     }
-
+    public Step getStepGivenIndex(int index){
+        return steps.get(index);
+    }
     public ArrayList<Videos> getVideoUrls(){
         ArrayList<Videos> videoUrls = new ArrayList<>(steps.size());
         int count = steps.size();

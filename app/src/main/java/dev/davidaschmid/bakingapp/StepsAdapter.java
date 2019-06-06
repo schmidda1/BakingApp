@@ -2,14 +2,11 @@ package dev.davidaschmid.BakingApp;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.media.RatingCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import java.util.ArrayList;
 
 import dev.davidaschmid.BakingApp.model.RecipeModel;
 
@@ -60,7 +57,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsAdapter
 
     @Override
     public void onBindViewHolder(@NonNull StepsAdapterViewHolder stepsAdapterViewHolder, int position) {
-        RecipeModel.Steps step = mRecipeModel.getSteps().get(position);
+        RecipeModel.Step step = mRecipeModel.getSteps().get(position);
         stepsAdapterViewHolder.mStepsTV.setText(step.getShortDescription());
     }
 
