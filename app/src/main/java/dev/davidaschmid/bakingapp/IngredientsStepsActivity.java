@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import dev.davidaschmid.BakingApp.StepsAdapter.StepsAdapterOnClickHandler;
 import dev.davidaschmid.BakingApp.model.RecipeModel;
@@ -17,6 +18,7 @@ public class IngredientsStepsActivity extends AppCompatActivity {
     public static boolean mTwoPane;
     Button mPreviousStep;
     Button mNextStep;
+
     int stepPosition;
     public static RecipeModel mRecipeModel;
     @Override
@@ -31,10 +33,7 @@ public class IngredientsStepsActivity extends AppCompatActivity {
         if (findViewById(R.id.step_instruction_fragment) != null){
             stepPosition = IngredientsStepsFragment.posInSteps;
             mTwoPane = true;
-            mPreviousStep = findViewById(R.id.button_prev);
-            mPreviousStep.setVisibility(View.GONE);
-            mNextStep = findViewById(R.id.button_next);
-            mNextStep.setVisibility(View.GONE);
+            StepDetailFragment.mStepInstructionTV.setVisibility(View.VISIBLE);
             //String stepInstruction =
             //StepDetailFragment.mStepInstructionTV.setText();
         }else{

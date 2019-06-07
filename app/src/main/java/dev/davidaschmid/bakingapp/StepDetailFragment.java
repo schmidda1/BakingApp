@@ -93,14 +93,16 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
         mPlayerView = rootView.findViewById(R.id.playerView);
         initializeMediaSession();
         int orientation = getResources().getConfiguration().orientation;
-        if(IngredientsStepsActivity.mTwoPane == false) {
-            if (orientation == 2) {//landscape mode
-                mExoPlayerFrame.setLayoutParams(params);
-            } else {
-                params.height = convertDpToPx(300);
-                params.width = -1;
-                mExoPlayerFrame.setLayoutParams(params);
-            }
+        if (orientation == 2 && IngredientsStepsActivity.mTwoPane == false) {//landscape mode
+            mExoPlayerFrame.setLayoutParams(params);
+        } else if(orientation == 1 && IngredientsStepsActivity.mTwoPane == false) {
+            params.height = convertDpToPx(300);
+            params.width = -1;
+            mExoPlayerFrame.setLayoutParams(params);
+        } else{
+            params.width = convertDpToPx(300);
+            params.height = convertDpToPx(300);
+            mExoPlayerFrame.setLayoutParams(params);
         }
         if(videoUrl.equals("")){
             mErrorImage.setVisibility(View.VISIBLE);
@@ -205,6 +207,7 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
         params.width = widthOrig;
         params.height = heightOrig;
         mExoPlayerFrame.setLayoutParams(params);
+        context2 = null;
     }
     @Override
     public void onTimelineChanged(Timeline timeline, Object manifest) {
