@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 import dev.davidaschmid.BakingApp.StepsAdapter.StepsAdapterOnClickHandler;
 import dev.davidaschmid.BakingApp.model.RecipeModel;
@@ -12,6 +14,10 @@ import dev.davidaschmid.BakingApp.utilities.NetworkUtils;
 public class IngredientsStepsActivity extends AppCompatActivity {
     private int DEFAULT_POSITION = -1;
     Intent intent;
+    public static boolean mTwoPane;
+    Button mPreviousStep;
+    Button mNextStep;
+    int stepPosition;
     public static RecipeModel mRecipeModel;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -21,10 +27,19 @@ public class IngredientsStepsActivity extends AppCompatActivity {
         int position = intent.getIntExtra(MainActivity.POSITION, DEFAULT_POSITION);
         mRecipeModel = MainActivity.recipeList.get(position);
         IngredientsStepsFragment.mStepsAdapter.setmRecipeModel(mRecipeModel);
-        //NetworkUtils.downloadVideos();
-        int testing = 0;
-        testing = 1;
-        testing = 2;
+        setTitle(mRecipeModel.getName());
+        if (findViewById(R.id.step_instruction_fragment) != null){
+            stepPosition = IngredientsStepsFragment.posInSteps;
+            mTwoPane = true;
+            mPreviousStep = findViewById(R.id.button_prev);
+            mPreviousStep.setVisibility(View.GONE);
+            mNextStep = findViewById(R.id.button_next);
+            mNextStep.setVisibility(View.GONE);
+            //String stepInstruction =
+            //StepDetailFragment.mStepInstructionTV.setText();
+        }else{
+            mTwoPane = false;
+        }
 
     }
     public void setRecipeModel(RecipeModel recipeModel){mRecipeModel = recipeModel;}

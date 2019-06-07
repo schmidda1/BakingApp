@@ -2,6 +2,7 @@ package dev.davidaschmid.BakingApp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -64,7 +65,19 @@ public class IngredientsStepsFragment extends Fragment implements StepsAdapterOn
     public void onClick(int position) {
         posInSteps = position;
         Toast.makeText(getContext(), "Position = " + position, Toast.LENGTH_LONG).show();
-        launchStepDetailActivity(position);
+        if (IngredientsStepsActivity.mTwoPane == true){
+            String stepInstruction = IngredientsStepsActivity.mRecipeModel.getSteps().get(position).getDescription();
+            StepDetailFragment.mStepInstructionTV.setText(stepInstruction);
+            String videoUrl = IngredientsStepsActivity.mRecipeModel.getSteps().get(position).getVideoURL();
+            if(videoUrl.equals("")){
+                StepDetailFragment.mErrorImage.setVisibility(View.VISIBLE);
+            }else {
+                StepDetailFragment.initializePlayer(Uri.parse(videoUrl));
+                StepDetailFragment.mErrorImage.setVisibility(View.INVISIBLE);
+            }
+        }else {
+            launchStepDetailActivity(position);
+        }
     }
     public void launchStepDetailActivity(int position){
         Class destinationClass = StepDetailActivity.class;

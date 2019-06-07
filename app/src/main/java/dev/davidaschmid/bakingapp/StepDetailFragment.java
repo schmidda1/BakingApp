@@ -53,11 +53,13 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
     private static final String CHANNEL_ID = "notification_channel";
     private static final String TAG = StepDetailFragment.class.getSimpleName();
     private int position;
-    TextView mStepInstructionTV;
+    public static TextView mStepInstructionTV;
     String stepInstruction;
-    private SimpleExoPlayer mExoPlayer;
-    private SimpleExoPlayerView mPlayerView;
-    private ImageView mErrorImage;
+    private static SimpleExoPlayer mExoPlayer;
+    private static SimpleExoPlayerView mPlayerView;
+    private static Context context;
+    private static StepDetailFragment context2;
+    public static ImageView mErrorImage;
     private FrameLayout mExoPlayerFrame;
     private static MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
@@ -72,6 +74,8 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        context = getContext();
+        context2 = this;
         final View rootView = inflater.inflate(R.layout.fragment_step_detail, container, false);
         mStepInstructionTV = rootView.findViewById(R.id.recipe_instruction_tv);
         mErrorImage = rootView.findViewById(R.id.error_image);
@@ -82,21 +86,22 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
         params.height = -1;
         params.width = -1;
         position = IngredientsStepsFragment.posInSteps;
-        RecipeModel.Step step = StepsAdapter.mRecipeModel.getStepGivenIndex(position);
+        RecipeModel.Step step = IngredientsStepsActivity.mRecipeModel.getStepGivenIndex(position);
         stepInstruction = step.getDescription();
         mStepInstructionTV.setText(stepInstruction);
         videoUrl = step.getVideoURL();
         mPlayerView = rootView.findViewById(R.id.playerView);
         initializeMediaSession();
         int orientation = getResources().getConfiguration().orientation;
-        if(orientation == 2){//landscape mode
-            mExoPlayerFrame.setLayoutParams(params);
-        }else{
-            params.height = convertDpToPx(300);
-            params.width = -1;
-            mExoPlayerFrame.setLayoutParams(params);
+        if(IngredientsStepsActivity.mTwoPane == false) {
+            if (orientation == 2) {//landscape mode
+                mExoPlayerFrame.setLayoutParams(params);
+            } else {
+                params.height = convertDpToPx(300);
+                params.width = -1;
+                mExoPlayerFrame.setLayoutParams(params);
+            }
         }
-
         if(videoUrl.equals("")){
             mErrorImage.setVisibility(View.VISIBLE);
         }else{
@@ -166,19 +171,19 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
                     .setShowActionsInCompactView(0, 1));
         mNotificationManager.notify(0, builder.build());
     }
-    private void initializePlayer(Uri mediaUri){
+    public static void initializePlayer(Uri mediaUri){
         String userAgent;
         if(mExoPlayer == null){
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector, loadControl);
             mPlayerView.setPlayer(mExoPlayer);
-            mExoPlayer.addListener(this);
+            mExoPlayer.addListener(context2);
 
         }
-        userAgent = Util.getUserAgent(getContext(), "BakingApp");
+        userAgent = Util.getUserAgent(context, "BakingApp");
         MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
-                getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
+                context, userAgent), new DefaultExtractorsFactory(), null, null);
         mExoPlayer.prepare(mediaSource);
 
         mExoPlayer.setPlayWhenReady(true);
