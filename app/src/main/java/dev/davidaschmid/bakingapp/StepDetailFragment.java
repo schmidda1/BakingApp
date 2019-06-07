@@ -58,7 +58,7 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
     private static SimpleExoPlayer mExoPlayer;
     private static SimpleExoPlayerView mPlayerView;
     private static Context context;
-    private static StepDetailFragment context2;
+    public static StepDetailFragment context2;
     public static ImageView mErrorImage;
     private FrameLayout mExoPlayerFrame;
     private static MediaSessionCompat mMediaSession;
@@ -93,15 +93,11 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
         mPlayerView = rootView.findViewById(R.id.playerView);
         initializeMediaSession();
         int orientation = getResources().getConfiguration().orientation;
-        if (orientation == 2 && IngredientsStepsActivity.mTwoPane == false) {//landscape mode
+        if (orientation == 2 && !IngredientsStepsActivity.mTwoPane) {//landscape mode
             mExoPlayerFrame.setLayoutParams(params);
-        } else if(orientation == 1 && IngredientsStepsActivity.mTwoPane == false) {
+        } else if(orientation == 1 && !IngredientsStepsActivity.mTwoPane) {
             params.height = convertDpToPx(300);
             params.width = -1;
-            mExoPlayerFrame.setLayoutParams(params);
-        } else{
-            params.width = convertDpToPx(300);
-            params.height = convertDpToPx(300);
             mExoPlayerFrame.setLayoutParams(params);
         }
         if(videoUrl.equals("")){
@@ -110,6 +106,7 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
             mErrorImage.setVisibility(View.INVISIBLE);
             initializePlayer(Uri.parse(videoUrl));
         }
+
         return rootView;
     }
     int convertDpToPx(int dp){
@@ -201,12 +198,14 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
     }
     @Override
     public void onDestroy(){
+        Toast.makeText(getContext(), "onDestroy method called", Toast.LENGTH_LONG).show();
         super.onDestroy();
         releasePlayer();
         mMediaSession.setActive(false);
-        params.width = widthOrig;
-        params.height = heightOrig;
-        mExoPlayerFrame.setLayoutParams(params);
+        //params.width = widthOrig;
+        //params.height = heightOrig;
+        //mExoPlayerFrame.setLayoutParams(params);
+        context=null;
         context2 = null;
     }
     @Override

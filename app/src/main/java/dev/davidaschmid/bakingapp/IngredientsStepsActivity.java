@@ -13,27 +13,34 @@ import dev.davidaschmid.BakingApp.model.RecipeModel;
 import dev.davidaschmid.BakingApp.utilities.NetworkUtils;
 
 public class IngredientsStepsActivity extends AppCompatActivity {
-    private int DEFAULT_POSITION = -1;
+    private int DEFAULT_POSITION = 0;
+    private final String POSITION_KEY = "position_key";
+    private final String TWOPANE_KEY = "twopane_key";
     Intent intent;
     public static boolean mTwoPane;
     Button mPreviousStep;
     Button mNextStep;
-
     int stepPosition;
     public static RecipeModel mRecipeModel;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState != null){
+            mTwoPane = savedInstanceState.getBoolean(TWOPANE_KEY);
+            stepPosition = savedInstanceState.getInt(POSITION_KEY);
+        }else{
+            intent = getIntent();
+            stepPosition = intent.getIntExtra(MainActivity.POSITION, DEFAULT_POSITION);
+        }
+        IngredientsStepsFragment.posInSteps = stepPosition;
         setContentView(R.layout.activity_ingredients_steps);
-        intent = getIntent();
-        int position = intent.getIntExtra(MainActivity.POSITION, DEFAULT_POSITION);
-        mRecipeModel = MainActivity.recipeList.get(position);
+
+        mRecipeModel = MainActivity.recipeList.get(stepPosition);
         IngredientsStepsFragment.mStepsAdapter.setmRecipeModel(mRecipeModel);
         setTitle(mRecipeModel.getName());
         if (findViewById(R.id.step_instruction_fragment) != null){
-            stepPosition = IngredientsStepsFragment.posInSteps;
+            //stepPosition = IngredientsStepsFragment.posInSteps;
             mTwoPane = true;
-            StepDetailFragment.mStepInstructionTV.setVisibility(View.VISIBLE);
             //String stepInstruction =
             //StepDetailFragment.mStepInstructionTV.setText();
         }else{
@@ -41,6 +48,15 @@ public class IngredientsStepsActivity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(POSITION_KEY, stepPosition);
+        outState.putBoolean(TWOPANE_KEY, mTwoPane);
+    }
+
     public void setRecipeModel(RecipeModel recipeModel){mRecipeModel = recipeModel;}
+
 
 }

@@ -41,6 +41,7 @@ public class StepDetailActivity extends AppCompatActivity {
 
     }
     public void onClickPreviousStep(View v){
+        StepDetailFragment.context2.onDestroy();
         int position = IngredientsStepsFragment.posInSteps;
         position--;
         if (position >= 0){
@@ -50,6 +51,7 @@ public class StepDetailActivity extends AppCompatActivity {
 
     }
     public void onClickNextStep(View v){
+        StepDetailFragment.context2.onDestroy();
         int position = IngredientsStepsFragment.posInSteps;
         int max = StepsAdapter.mRecipeModel.getSteps().size()-1;
         position++;

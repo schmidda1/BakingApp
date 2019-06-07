@@ -99,7 +99,7 @@ public class RecipeModel {
         return videoUrls;
     }
     public String getIngredients(){
-        String allTogether = "";
+        String allTogether = "INGREDIENTS:  ";
         for (int i = 0; i < ingredients.size(); ++i){
            allTogether += Float.toString(ingredients.get(i).quantity) + " "
            + ingredients.get(i).measure + " "
