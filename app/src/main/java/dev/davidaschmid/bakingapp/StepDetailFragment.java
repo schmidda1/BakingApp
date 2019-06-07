@@ -17,9 +17,11 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,10 +58,13 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
     private ImageView mErrorImage;
+    private FrameLayout mExoPlayerFrame;
     private static MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
     private NotificationManager mNotificationManager;
     private String videoUrl;
+    private int heightOrig, widthOrig;
+    ViewGroup.LayoutParams params;
     public StepDetailFragment(){
 
     }
@@ -70,6 +75,12 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
         final View rootView = inflater.inflate(R.layout.fragment_step_detail, container, false);
         mStepInstructionTV = rootView.findViewById(R.id.recipe_instruction_tv);
         mErrorImage = rootView.findViewById(R.id.error_image);
+        mExoPlayerFrame = rootView.findViewById(R.id.exoplayer_frame);
+        params = mExoPlayerFrame.getLayoutParams();
+        heightOrig = params.height;
+        widthOrig = params.width;
+        params.height = -1;
+        params.width = -1;
         position = IngredientsStepsFragment.posInSteps;
         RecipeModel.Step step = StepsAdapter.mRecipeModel.getStepGivenIndex(position);
         stepInstruction = step.getDescription();
@@ -77,6 +88,15 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
         videoUrl = step.getVideoURL();
         mPlayerView = rootView.findViewById(R.id.playerView);
         initializeMediaSession();
+        int orientation = getResources().getConfiguration().orientation;
+        if(orientation == 2){//landscape mode
+            mExoPlayerFrame.setLayoutParams(params);
+        }else{
+            params.height = convertDpToPx(300);
+            params.width = -1;
+            mExoPlayerFrame.setLayoutParams(params);
+        }
+
         if(videoUrl.equals("")){
             mErrorImage.setVisibility(View.VISIBLE);
         }else{
@@ -84,6 +104,13 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
             initializePlayer(Uri.parse(videoUrl));
         }
         return rootView;
+    }
+    int convertDpToPx(int dp){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int dpi = displayMetrics.densityDpi;
+        int px = (int)(dp*dpi/160.0);
+        return px;
     }
     private void initializeMediaSession(){
         mMediaSession = new MediaSessionCompat(getContext(), TAG);
@@ -170,6 +197,9 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
         super.onDestroy();
         releasePlayer();
         mMediaSession.setActive(false);
+        params.width = widthOrig;
+        params.height = heightOrig;
+        mExoPlayerFrame.setLayoutParams(params);
     }
     @Override
     public void onTimelineChanged(Timeline timeline, Object manifest) {

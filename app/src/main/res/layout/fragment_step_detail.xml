@@ -1,40 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-tools:context="dev.davidaschmid.BakingApp.StepDetailActivity"
-android:layout_width="match_parent"
-android:layout_height="match_parent">
-
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/playerView"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@android:color/black"
-        app:default_artwork="@drawable/picture_frame"
-        app:layout_constraintTop_toTopOf="parent"
-        app:use_artwork="true"
-
-        tools:layout_editor_absoluteX="0dp" />
-
-    <ImageView
-        android:id="@+id/error_image"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:src="@drawable/picture_frame"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
-<TextView
-    android:id="@+id/recipe_instruction_tv"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:layout_marginTop="8dp"
-    android:text="Recipe Step Instruction"
-    android:background="@android:color/white"
-    android:textColor="@android:color/holo_blue_dark"
-    app:layout_constraintTop_toBottomOf="@+id/playerView"
-    tools:layout_editor_absoluteX="0dp" />
+    android:layout_height="match_parent"
+    tools:context="dev.davidaschmid.BakingApp.StepDetailActivity">
+
+    <FrameLayout
+        android:id="@+id/exoplayer_frame"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/playerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            app:default_artwork="@drawable/picture_frame"
+            app:layout_constraintTop_toTopOf="parent"
+            app:use_artwork="true"
+
+            tools:layout_editor_absoluteX="0dp" />
+
+        <ImageView
+            android:id="@+id/error_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription='"error image"'
+            android:src="@drawable/picture_frame"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="0dp" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/recipe_instruction_tv"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/white"
+        android:text="Recipe Step Instruction"
+        android:textColor="@android:color/holo_blue_dark"
+        app:layout_constraintTop_toBottomOf="@id/exoplayer_frame"
+        tools:layout_editor_absoluteX="0dp" />
 
     <Button
         android:id="@+id/button_prev"
@@ -49,16 +57,16 @@ android:layout_height="match_parent">
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recipe_instruction_tv" />
 
-<Button
-    android:id="@+id/button_next"
-    android:layout_width="150dp"
-    android:layout_height="50dp"
-    android:text="Next"
-    android:layout_marginTop="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginRight="8dp"
-    android:onClick="onClickNextStep"
-    android:background="@android:color/holo_blue_light"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/recipe_instruction_tv" />
+    <Button
+        android:id="@+id/button_next"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@android:color/holo_blue_light"
+        android:onClick="onClickNextStep"
+        android:text="Next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recipe_instruction_tv" />
 </android.support.constraint.ConstraintLayout>
