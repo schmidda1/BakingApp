@@ -24,6 +24,7 @@ public class StepDetailActivity extends AppCompatActivity {
         int position = intent.getIntExtra(IngredientsStepsFragment.STEP_POSITION, DEFAULT_POSITION);
         setTitle(StepsAdapter.mRecipeModel.getName());
         int orientation = getResources().getConfiguration().orientation;
+
         if(orientation == 2){//landscape mode
             android.support.v7.app.ActionBar actionBar = getSupportActionBar();
             if(actionBar != null){

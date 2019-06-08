@@ -21,6 +21,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -95,7 +96,10 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == 2 && !IngredientsStepsActivity.mTwoPane) {//landscape mode
             mExoPlayerFrame.setLayoutParams(params);
+            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         } else if(orientation == 1 && !IngredientsStepsActivity.mTwoPane) {
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
             params.height = convertDpToPx(300);
             params.width = -1;
             mExoPlayerFrame.setLayoutParams(params);
@@ -172,6 +176,7 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
     }
     public static void initializePlayer(Uri mediaUri){
         String userAgent;
+        float volume;
         if(mExoPlayer == null){
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
@@ -180,6 +185,7 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
             mExoPlayer.addListener(context2);
 
         }
+        volume = mExoPlayer.getVolume();
         userAgent = Util.getUserAgent(context, "BakingApp");
         MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                 context, userAgent), new DefaultExtractorsFactory(), null, null);

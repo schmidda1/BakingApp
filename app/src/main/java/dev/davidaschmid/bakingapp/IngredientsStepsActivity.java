@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -25,8 +26,8 @@ public class IngredientsStepsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTwoPane = getPaneMode();
         if(savedInstanceState != null){
-            mTwoPane = savedInstanceState.getBoolean(TWOPANE_KEY);
             stepPosition = savedInstanceState.getInt(POSITION_KEY);
         }else{
             intent = getIntent();
@@ -38,17 +39,21 @@ public class IngredientsStepsActivity extends AppCompatActivity {
         mRecipeModel = MainActivity.recipeList.get(stepPosition);
         IngredientsStepsFragment.mStepsAdapter.setmRecipeModel(mRecipeModel);
         setTitle(mRecipeModel.getName());
-        if (findViewById(R.id.step_instruction_fragment) != null){
-            //stepPosition = IngredientsStepsFragment.posInSteps;
-            mTwoPane = true;
-            //String stepInstruction =
-            //StepDetailFragment.mStepInstructionTV.setText();
-        }else{
-            mTwoPane = false;
-        }
 
     }
+    boolean getPaneMode(){
+        //widthPixels and heightPixels change with orientation
+        boolean twoPane;
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int dpi = displayMetrics.densityDpi;
+        int widthPx = displayMetrics.widthPixels;
+        int heightPx = displayMetrics.heightPixels;
+        int trueWidthDp = widthPx < heightPx ? (int)(widthPx*160.0/dpi):(int)(heightPx*160.0/dpi);
+        twoPane = trueWidthDp >= 600 ? true : false;
+        return twoPane;
 
+    }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
