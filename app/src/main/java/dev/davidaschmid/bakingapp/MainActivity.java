@@ -104,6 +104,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         Class destinationClass = IngredientsStepsActivity.class;
         Intent intent = new Intent(this, destinationClass);
         intent.putExtra(POSITION, position);
+        String widgetTitle = IngredientsStepsActivity.mRecipeModel.getName();
+        widgetTitle = "*** " + widgetTitle + " ***" + "\n";
+        String ingredients = IngredientsStepsActivity.mRecipeModel.getIngredients();
+        ingredients = widgetTitle + ingredients;
+        RecipeService.startActionUpdateRecipeWidgets(this, ingredients);
         startActivity(intent);
 
     }
