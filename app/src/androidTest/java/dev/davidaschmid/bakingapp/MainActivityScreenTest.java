@@ -29,7 +29,7 @@ public class MainActivityScreenTest {
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void clickGridViewItem_OpensIngredientsStepsActivity(){
+    public void clickRecyclerViewItem_OpensIngredientsStepsActivity(){
         onView(withId(R.id.main_recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
         onView(withId(R.id.ingredients_tv)).check(matches(withText(INGREDIENTS)));
     }
