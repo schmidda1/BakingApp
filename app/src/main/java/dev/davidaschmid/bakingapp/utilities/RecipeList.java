@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import dev.davidaschmid.BakingApp.model.RecipeModel;
 
 public class RecipeList {
-    @SerializedName("recipes")
+    //@SerializedName("")
     @Expose
     private ArrayList<RecipeModel> recipes = null;
     public ArrayList<RecipeModel> getRecipes(){return recipes;}

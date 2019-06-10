@@ -3,7 +3,7 @@
     android:initialLayout="@layout/recipe_widget"
     android:minHeight="150dp"
     android:minWidth="150dp"
-    android:previewImage="@drawable/ic_music_note"
+    android:previewImage="@mipmap/ic_launcher2_round"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="1800000"
     android:widgetCategory="home_screen"

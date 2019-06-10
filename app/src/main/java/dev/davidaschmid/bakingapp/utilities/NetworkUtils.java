@@ -19,10 +19,10 @@ public class NetworkUtils {
     private static Response<RecipeList> response = null;
     private static ArrayList<RecipeModel> recipeList;
 
-
+    //https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json
 
     public interface ApiService {
-        @GET("/recipes/{file}")
+        @GET("/topher/2017/May/59121517_baking/{file}")
         Call<RecipeList> getApiData(@Path("file")String file);
     }
     /*
@@ -31,7 +31,7 @@ public class NetworkUtils {
     }*/
     public static ArrayList<RecipeModel> getApiDataUsingRetrofit() {
         asyncFinished = 0;
-        String ROOT_URL = "https://schmidda1.github.io";
+        String ROOT_URL = "https://d17h27t6h515a5.cloudfront.net";
         final String name;
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ROOT_URL)
