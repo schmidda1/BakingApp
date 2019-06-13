@@ -1,51 +1,42 @@
 package dev.davidaschmid.BakingApp.utilities;
 
+import android.net.Uri;
+import android.util.Log;
+
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import dev.davidaschmid.BakingApp.AppExecutors;
-import dev.davidaschmid.BakingApp.StepsAdapter;
 import dev.davidaschmid.BakingApp.model.RecipeModel;
-import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
 
 public class NetworkUtils {
     private static int asyncFinished;
-    private static Response<RecipeList> response = null;
+    private static Response<JSONObject> response = null;
     private static ArrayList<RecipeModel> recipeList;
+    static JSONObject jsonArray;
+    static String responseStr;
+    static String finalUrl = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+    static final String TAG = NetworkUtils.class.getSimpleName();
 
     //https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json
 
-    public interface ApiService {
-        @GET("/topher/2017/May/59121517_baking/{file}")
-        Call<RecipeList> getApiData(@Path("file")String file);
-    }
-    /*
-    public interface ApiService2{
-        @GET("")
-    }*/
-    public static ArrayList<RecipeModel> getApiDataUsingRetrofit() {
+    public static String getNetworkResourceJson(){
         asyncFinished = 0;
-        String ROOT_URL = "https://d17h27t6h515a5.cloudfront.net";
-        final String name;
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ROOT_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService service = retrofit.create(ApiService.class);
-        final Call<RecipeList> call = service.getApiData("baking.json");
+        URL url = buildUrl();
         AppExecutors.getInstance().networkIO().execute(new Runnable(){
             @Override
             public void run() {
                 try {
-                    response = call.execute();
-                    recipeList = response.body().getRecipes();
+                    responseStr = getResponseFromHttpUrl(url);
                     asyncFinished = 1;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -59,11 +50,42 @@ public class NetworkUtils {
                 e.printStackTrace();
             }
         }
-        return recipeList;
+        return responseStr;
     }
-    void downloadVideos(){
-        ArrayList<RecipeModel.Videos> videoUrls =  StepsAdapter.mRecipeModel.getVideoUrls();
+    public static URL buildUrl() {
 
+        Uri builtUri = Uri.parse(finalUrl).buildUpon()
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        Log.v(TAG, "Built URI " + url);
+
+        return url;
     }
+    public static String getResponseFromHttpUrl(URL url) throws IOException {
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        try {
+            InputStream in = urlConnection.getInputStream();
+
+            Scanner scanner = new Scanner(in);
+            scanner.useDelimiter("\\A");
+
+            boolean hasInput = scanner.hasNext();
+            if (hasInput) {
+                return scanner.next();
+            } else {
+                return null;
+            }
+        } finally {
+            urlConnection.disconnect();
+        }
+    }
+
 }
 

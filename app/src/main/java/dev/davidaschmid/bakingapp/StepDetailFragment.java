@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,9 +43,6 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-
-
-import java.util.concurrent.TimeUnit;
 
 import dev.davidaschmid.BakingApp.model.RecipeModel;
 
@@ -208,9 +204,6 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
         super.onDestroy();
         releasePlayer();
         mMediaSession.setActive(false);
-        //params.width = widthOrig;
-        //params.height = heightOrig;
-        //mExoPlayerFrame.setLayoutParams(params);
         context=null;
         context2 = null;
     }
@@ -240,7 +233,6 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
                     mExoPlayer.getCurrentPosition(), 1f);
         }
         mMediaSession.setPlaybackState(mStateBuilder.build());
-        //showNotification(mStateBuilder.build());
     }
 
     @Override

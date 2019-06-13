@@ -89,15 +89,6 @@ public class RecipeModel {
     public Step getStepGivenIndex(int index){
         return steps.get(index);
     }
-    public ArrayList<Videos> getVideoUrls(){
-        ArrayList<Videos> videoUrls = new ArrayList<>(steps.size());
-        int count = steps.size();
-        for (int i = 0; i < count; ++i){
-            String videoUrl = steps.get(0).getVideoURL();
-            videoUrls.set(i, new Videos(i, videoUrl));
-        }
-        return videoUrls;
-    }
     public String getIngredients(){
         String allTogether = "INGREDIENTS:  ";
         for (int i = 0; i < ingredients.size(); ++i){

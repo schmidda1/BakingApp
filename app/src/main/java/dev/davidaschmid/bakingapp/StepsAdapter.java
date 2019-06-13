@@ -1,7 +1,6 @@
 package dev.davidaschmid.BakingApp;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,8 +29,6 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsAdapter
             mStepsTV = view.findViewById(R.id.recipe_steps_tv);
             view.setOnClickListener(this);
         }
-
-
         @Override
         public void onClick(View v) {
             if (textViewOld != null){

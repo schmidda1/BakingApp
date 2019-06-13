@@ -5,13 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
-import dev.davidaschmid.BakingApp.StepsAdapter.StepsAdapterOnClickHandler;
 import dev.davidaschmid.BakingApp.model.RecipeModel;
-import dev.davidaschmid.BakingApp.utilities.NetworkUtils;
 
 public class IngredientsStepsActivity extends AppCompatActivity {
     private int DEFAULT_POSITION = 0;

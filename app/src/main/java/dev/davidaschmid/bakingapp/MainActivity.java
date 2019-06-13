@@ -3,33 +3,31 @@ package dev.davidaschmid.BakingApp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import dev.davidaschmid.BakingApp.model.RecipeModel;
-import dev.davidaschmid.BakingApp.utilities.RecipeList;
 import dev.davidaschmid.BakingApp.utilities.NetworkUtils;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.RecipeAdapterOnClickHandler {
     public static final String POSITION = "position";
     private final String TAG = MainActivity.class.getSimpleName();
+    private JSONObject jsonObject;
+    private String response;
     public static ArrayList<RecipeModel> recipeList;
     JSONArray mRecipesJson;
     CardView mRecipeCard;
@@ -41,21 +39,13 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     int asyncFinished;
     private Gson gson;
     private RecipeAdapter mRecipeAdapter;
-    Response<RecipeList> response = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mRecipeRV = findViewById(R.id.main_recycler_view);
-        int orientation = getResources().getConfiguration().orientation;
         int columns = numberOfColumns();
-        /*
-        if (orientation == 1){//portrait
-            columns = 1;
-        } else {//landscape
-            columns = 2;
-        }*/
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, columns);
         mRecipeRV.setLayoutManager(layoutManager);
@@ -63,14 +53,18 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         mRecipeAdapter = new RecipeAdapter(this);
         mRecipeRV.setAdapter(mRecipeAdapter);
         asyncFinished = 0;
-        recipeList = NetworkUtils.getApiDataUsingRetrofit();
+        response = NetworkUtils.getNetworkResourceJson();
+        try {
+            recipeList = getRecipes(response);
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
         recipeNames = createLabels();
         mRecipeAdapter.setmRecipeNames(recipeNames);
 
     }
 
     private int numberOfColumns() {
-        double viewWidth;
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         // You can change this divider to adjust the size of the poster
@@ -125,6 +119,20 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         Context context = this;
         Toast.makeText(context, "Position = " + position, Toast.LENGTH_LONG).show();
         launchNextActivity(position);
+    }
+    ArrayList<RecipeModel> getRecipes(String response)throws JSONException {
+        Gson gson = new Gson();
+        ArrayList<RecipeModel> recipes;
+        RecipeModel recipe;
+        JSONArray jsonArray = new JSONArray(response);
+        int size = jsonArray.length();
+        recipes = new ArrayList<>(size);
+        for(int i = 0; i < size; ++i){
+            String jsonObject = jsonArray.getJSONObject(i).toString();
+            recipe = gson.fromJson(jsonObject, RecipeModel.class);
+            recipes.add(recipe);
+        }
+        return recipes;
     }
 
 }

@@ -1,6 +1,5 @@
 package dev.davidaschmid.BakingApp;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import dev.davidaschmid.BakingApp.StepsAdapter.StepsAdapterOnClickHandler;
 
@@ -24,23 +22,6 @@ public class IngredientsStepsFragment extends Fragment implements StepsAdapterOn
     public static View mVertLine;
     public static int posInSteps;
     private ViewGroup.LayoutParams params1, params2;
-    //OnItemClickListener mCallback;
-    /*
-    public interface OnItemClickListener{
-        void onItemSelected(int position);
-    }*/
-    /*
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try{
-            mCallback = (OnItemClickListener)context;
-        }catch (ClassCastException e){
-            throw new ClassCastException(context.toString()
-                    + " must implement OnItemClickListener");
-        }
-
-    }*/
     //mandatory empty constructor
     public IngredientsStepsFragment(){
 
@@ -53,12 +34,6 @@ public class IngredientsStepsFragment extends Fragment implements StepsAdapterOn
         TextView mIngredientsTV = rootView.findViewById(R.id.ingredients_tv);
         String ingredients = IngredientsStepsActivity.mRecipeModel.getIngredients();
         mIngredientsTV.setText(ingredients);
-        //mVertLine = rootView.findViewById(R.id.vertical_line);
-        //params1 = mIngredientsTV.getLayoutParams();
-        //params2 = mVertLine.getLayoutParams();
-        //params2.height = params1.height;
-        //mVertLine.setLayoutParams(params2);
-
         mRecyclerView = rootView.findViewById(R.id.steps_rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -82,10 +57,6 @@ public class IngredientsStepsFragment extends Fragment implements StepsAdapterOn
             }else {
                 StepDetailFragment.initializePlayer(Uri.parse(videoUrl));
                 StepDetailFragment.mErrorImage.setVisibility(View.INVISIBLE);
-            }
-            if(position == 0) {//first position
-
-               //StepsAdapter.mStepsTV.setBackgroundColor(getResources().getColor(R.color.colorAccent));
             }
         }else {
             launchStepDetailActivity(position);
