@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.google.android.exoplayer2.util.Util;
+
 public class StepDetailActivity extends AppCompatActivity {
     Intent intent;
     int DEFAULT_POSITION = -1;
@@ -26,22 +28,48 @@ public class StepDetailActivity extends AppCompatActivity {
             }
         }
     }
+    /*
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(Util.SDK_INT <= 23){
+            StepDetailFragment.releasePlayer();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(Util.SDK_INT > 23){
+            StepDetailFragment.releasePlayer();
+        }
+    }*/
+
+
     public void onClickPreviousStep(View v){
-        StepDetailFragment.context2.onDestroy();
+        StepDetailFragment.context2.onPause();
+        StepDetailFragment.context2.onStop();
         int position = IngredientsStepsFragment.posInSteps;
         position--;
         if (position >= 0){
+            //StepDetailFragment.context2.onDestroy();
+
             IngredientsStepsFragment.mRecyclerView.findViewHolderForAdapterPosition(position).itemView.performClick();
 
         }
 
     }
     public void onClickNextStep(View v){
-        StepDetailFragment.context2.onDestroy();
+        //StepDetailFragment.context2.onPause();
+        //StepDetailFragment.context2.onStop();
+        //StepDetailFragment.playerCleanup();
         int position = IngredientsStepsFragment.posInSteps;
         int max = StepsAdapter.mRecipeModel.getSteps().size()-1;
         position++;
         if (position <= max) {
+            //StepDetailFragment.releasePlayer();
+            //StepDetailFragment.context2.onDestroy();
+            //StepDetailFragment.context2.onPause();
             IngredientsStepsFragment.mRecyclerView.findViewHolderForAdapterPosition(position).itemView.performClick();
         }
 

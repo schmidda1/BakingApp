@@ -59,8 +59,10 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepsAdapter
     public void onBindViewHolder(@NonNull StepsAdapterViewHolder stepsAdapterViewHolder, int position) {
         RecipeModel.Step step = mRecipeModel.getSteps().get(position);
         stepsAdapterViewHolder.mStepsTV.setText(step.getShortDescription());
-        if(position == 0 && IngredientsStepsActivity.mTwoPane){
-            stepsAdapterViewHolder.mStepsTV.setBackgroundColor(colorAccent);
+        if(IngredientsStepsFragment.savedInstanceStateGlobal != null
+            && position == IngredientsStepsFragment.posInSteps){
+            int color = stepsAdapterViewHolder.mStepsTV.getResources().getColor(R.color.colorAccent);
+            stepsAdapterViewHolder.mStepsTV.setBackgroundColor(color);
             textViewOld = stepsAdapterViewHolder.mStepsTV;
         }
     }

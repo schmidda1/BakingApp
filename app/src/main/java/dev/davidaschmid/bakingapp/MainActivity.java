@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     @Override
     public void onClick(int position) {
         Context context = this;
-        Toast.makeText(context, "Position = " + position, Toast.LENGTH_LONG).show();
         launchNextActivity(position);
     }
     ArrayList<RecipeModel> getRecipes(String response)throws JSONException {

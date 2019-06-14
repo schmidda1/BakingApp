@@ -21,7 +21,6 @@ public class IngredientsStepsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTwoPane = getPaneMode();
         if(savedInstanceState != null){
             stepPosition = savedInstanceState.getInt(POSITION_KEY);
         }else{
@@ -34,9 +33,15 @@ public class IngredientsStepsActivity extends AppCompatActivity {
         mRecipeModel = MainActivity.recipeList.get(stepPosition);
         IngredientsStepsFragment.mStepsAdapter.setmRecipeModel(mRecipeModel);
         setTitle(mRecipeModel.getName());
+        if (findViewById(R.id.step_instruction_fragment) != null){
+            mTwoPane = true;
+        }else{
+            mTwoPane = false;
+        }
 
     }
     boolean getPaneMode(){
+        //This method does work but I won't use it to satisfy the reviewer.
         //widthPixels and heightPixels change with orientation
         boolean twoPane;
         DisplayMetrics displayMetrics = new DisplayMetrics();
