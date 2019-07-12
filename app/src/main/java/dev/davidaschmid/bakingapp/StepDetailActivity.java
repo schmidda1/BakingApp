@@ -1,12 +1,17 @@
 package dev.davidaschmid.BakingApp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import dev.davidaschmid.BakingApp.StepDetailFragment;
 
 import com.google.android.exoplayer2.util.Util;
+
+import dev.davidaschmid.BakingApp.model.RecipeModel;
 
 public class StepDetailActivity extends AppCompatActivity {
     Intent intent;
@@ -47,31 +52,38 @@ public class StepDetailActivity extends AppCompatActivity {
 
 
     public void onClickPreviousStep(View v){
-        StepDetailFragment.context2.onPause();
-        StepDetailFragment.context2.onStop();
         int position = IngredientsStepsFragment.posInSteps;
+
         position--;
         if (position >= 0){
-            //StepDetailFragment.context2.onDestroy();
-
-            IngredientsStepsFragment.mRecyclerView.findViewHolderForAdapterPosition(position).itemView.performClick();
+            updateStepDetailViews(position);
 
         }
 
     }
     public void onClickNextStep(View v){
-        //StepDetailFragment.context2.onPause();
-        //StepDetailFragment.context2.onStop();
-        //StepDetailFragment.playerCleanup();
+
         int position = IngredientsStepsFragment.posInSteps;
-        int max = StepsAdapter.mRecipeModel.getSteps().size()-1;
+        int max = IngredientsStepsActivity.mRecipeModel.getSteps().size()-1;
         position++;
         if (position <= max) {
-            //StepDetailFragment.releasePlayer();
-            //StepDetailFragment.context2.onDestroy();
-            //StepDetailFragment.context2.onPause();
-            IngredientsStepsFragment.mRecyclerView.findViewHolderForAdapterPosition(position).itemView.performClick();
+            updateStepDetailViews(position);
         }
+
+    }
+    private void updateStepDetailViews(int position){
+        RecipeModel.Step step = IngredientsStepsActivity.mRecipeModel.getStepGivenIndex(position);
+        StepDetailFragment.mStepInstructionTV.setText(step.getDescription());
+        String videoUrl = step.getVideoURL();
+        if (videoUrl.equals("")){
+            StepDetailFragment.mErrorImage.setVisibility(View.VISIBLE);
+            StepDetailFragment.initializePlayer();
+        } else {
+            StepDetailFragment.mErrorImage.setVisibility(View.INVISIBLE);
+            StepDetailFragment.initializePlayer();
+            StepDetailFragment.prepareExoPlayer(Uri.parse(videoUrl), true);
+        }
+        IngredientsStepsFragment.posInSteps = position;
 
     }
 }

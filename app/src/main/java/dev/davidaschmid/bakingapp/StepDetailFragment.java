@@ -271,6 +271,8 @@ public class StepDetailFragment extends Fragment implements ExoPlayer.EventListe
     @Override
     public void onDestroy(){
         super.onDestroy();
+        context = null;
+        context2 = null;
         //Log.d(TAG, "onDestroy() called");
     }
     @Override
